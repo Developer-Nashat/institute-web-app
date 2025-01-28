@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Support\RawJs;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Subject extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -20,10 +23,10 @@ class Subject extends Model
     protected $fillable = [
         'sub_name',
         'sub_price',
-        'DurationType',
-        'TotalHours',
-        'Totaldays',
-        'cat_id',
+        'duration_type',
+        'total_hours',
+        'total_days',
+        'category_id',
     ];
 
     /**
@@ -32,18 +35,51 @@ class Subject extends Model
      * @var array
      */
     protected $casts = [
-        'sub_price' => 'decimal',
-        'TotalHours' => 'integer',
-        'Totaldays' => 'integer',
-        'cat_id' => 'integer',
+        'category_id' => 'integer',
     ];
 
-    public function diplomas(): BelongsToMany
+    public static function getForm()
     {
-        return $this->belongsToMany(Diploma::class);
+        return
+            [
+                TextInput::make('sub_name')->label('اسم المادة')
+                    ->required()
+                    ->columnSpanFull(),
+                TextInput::make('sub_price')->label('سعر المادة')
+                    ->required()
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->numeric(),
+                TextInput::make('total_days')->label('عدد الأيام')
+                    ->numeric(),
+                TextInput::make('total_hours')->label('عدد الساعة')
+                    ->numeric(),
+
+                Select::make('category_id')
+                    ->required()
+                    ->searchable()
+                    ->preload()
+                    ->relationship('category', 'cat_name')
+                    ->label('التصنيف')
+                    ->columnSpanFull()
+                    ->createOptionForm(Category::getForm())
+                    ->EditOptionForm(Category::getForm())
+            ];
     }
 
-    public function cat(): BelongsTo
+    public function subjectsOfDiploma()
+    {
+        return $this->hasMany(DiplomaSubject::class);
+    }
+
+    public function diplomas()
+    {
+        return $this->belongsToMany(Diploma::class)
+            ->withPivot(['order'])
+            ->withTimestamps();
+    }
+
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }

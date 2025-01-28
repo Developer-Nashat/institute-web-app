@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('diploma_subject', function (Blueprint $table) {
-            $table->foreignId('diploma_id');
-            $table->foreignId('subject_id');
+            $table->foreignId('diploma_id')->constrained();
+            $table->foreignId('subject_id')->constrained();
+            $table->smallInteger('order')->default(0);
         });
 
         Schema::enableForeignKeyConstraints();

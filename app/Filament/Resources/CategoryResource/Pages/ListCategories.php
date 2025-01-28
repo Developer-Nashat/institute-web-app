@@ -13,7 +13,15 @@ class ListCategories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('إضافة تصنيف')
+                ->modal()
+                ->modalWidth('xl')
+                // ->modelLabel('تصنيف')
+                ->modalHeading('إضافة تصنيف')
+                // ->modalCancelActionLabel('إلغاء')
+                // ->modalSubmitActionLabel('حفظ')
+                ->createAnother(false)
         ];
     }
 }

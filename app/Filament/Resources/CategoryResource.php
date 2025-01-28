@@ -5,24 +5,24 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
-use Filament\Forms;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $modelLabel = 'التصنيف';
+    protected static ?string $pluralModelLabel = 'التصنيفات';
+
+    protected static ?int $navigationSort = 0;
 
     public static function form(Form $form): Form
     {
@@ -37,18 +37,19 @@ class CategoryResource extends Resource
                 TextColumn::make('cat_name')
                     ->label("التصنيف"),
                 TextColumn::make('subject_count')
-
                     ->label('عدد المواد')
                     ->counts('subjects')
+                    ->searchable(false)
 
             ])
+            ->searchPlaceholder('بحث')
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                // ->modalHeading(fn($record): string => 'حذف ' . $record->cat_name)
+                    ->modalHeading(fn($record): string => 'حذف التصنيف: ' . $record->cat_name)
                 // ->modalDescription('تاكيد الحذف')
                 // ->modalSubmitActionLabel('موافق')
                 // ->modalCancelActionLabel('إلغاء')
@@ -64,7 +65,10 @@ class CategoryResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()
                     // ->modalHeading('حذف'),
                 ]),
-            ]);
+            ])
+
+            ->emptyStateHeading('لاتوجد تصنيفات')
+            ->emptyStateDescription('قم بإضافة التصنيفات');
     }
 
     public static function getRelations(): array
@@ -78,7 +82,7 @@ class CategoryResource extends Resource
     {
         return [
             'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
+            // 'create' => Pages\CreateCategory::route('/create'),
             // 'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }

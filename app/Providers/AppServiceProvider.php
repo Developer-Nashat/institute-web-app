@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\Column;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,5 +30,8 @@ class AppServiceProvider extends ServiceProvider
                 ->searchable()
                 ->sortable();
         });
+
+        Table::$defaultNumberLocale = 'en';
+        Infolist::$defaultNumberLocale = 'en';
     }
 }

@@ -15,8 +15,8 @@ return new class extends Migration
 
         Schema::create('certificates', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('student_id')->constrained();
-            $table->foreignId('course_id')->constrained();
+            $table->foreignId('student_id')->constrained();
+            $table->foreignUuid('course_id')->constrained();
             $table->string('certificate_no')->unique();
             $table->date('issue_date')->nullable();
             $table->date('expiration_date')->nullable();

@@ -13,7 +13,10 @@ class ListSubjects extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->slideOver()
+                ->modelLabel('مادة')
+                ->label('إضافة مادة'),
         ];
     }
 }

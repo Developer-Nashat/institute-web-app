@@ -15,12 +15,12 @@ return new class extends Migration
 
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->string('sub_name');
+            $table->string('sub_name')->unique();
             $table->decimal('sub_price');
-            $table->string('DurationType');
-            $table->smallInteger('TotalHours');
-            $table->smallInteger('Totaldays');
-            $table->foreignId('cat_id')->constrained('categories');
+            $table->string('duration_type')->nullable();
+            $table->smallInteger('total_hours')->nullable();
+            $table->smallInteger('total_days')->nullable();
+            $table->foreignId('category_id')->constrained('categories');
             $table->timestamps();
         });
 

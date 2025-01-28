@@ -33,11 +33,13 @@ class Category extends Model
     {
         return [
             TextInput::make('cat_name')
+                ->label('اسم التصنيف')
+                ->columnSpanFull()
         ];
     }
 
     public function subjects(): HasMany
     {
-        return $this->hasMany(Subject::class, 'cat_id');
+        return $this->hasMany(Subject::class);
     }
 }
