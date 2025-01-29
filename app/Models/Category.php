@@ -33,6 +33,10 @@ class Category extends Model
     {
         return [
             TextInput::make('cat_name')
+                ->unique(ignoreRecord: true)
+                ->validationMessages([
+                    'unique' => 'يوجد تصنيف بهذا الاسم'
+                ])
                 ->label('اسم التصنيف')
                 ->columnSpanFull()
         ];

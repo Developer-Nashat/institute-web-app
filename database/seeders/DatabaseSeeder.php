@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Nationality;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,9 +16,25 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        Nationality::factory()->create([
+            'name' => 'يمني'
+        ]);
+
+        Nationality::factory()->create([
+            'name' => 'سعودي'
+        ]);
+
+        Nationality::factory()->create([
+            'name' => 'عماني'
+        ]);
+
+        Nationality::factory()->create([
+            'name' => 'أماراتي'
         ]);
     }
 }

@@ -42,7 +42,12 @@ class Subject extends Model
     {
         return
             [
-                TextInput::make('sub_name')->label('اسم المادة')
+                TextInput::make('sub_name')
+                    ->unique(ignoreRecord: true)
+                    ->validationMessages([
+                        'unique' => 'توجد مادة بهذا الاسم'
+                    ])
+                    ->label('اسم المادة')
                     ->required()
                     ->columnSpanFull(),
                 TextInput::make('sub_price')->label('سعر المادة')
@@ -65,11 +70,6 @@ class Subject extends Model
                     ->createOptionForm(Category::getForm())
                     ->EditOptionForm(Category::getForm())
             ];
-    }
-
-    public function subjectsOfDiploma()
-    {
-        return $this->hasMany(DiplomaSubject::class);
     }
 
     public function diplomas()

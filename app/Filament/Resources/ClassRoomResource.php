@@ -17,7 +17,9 @@ class ClassRoomResource extends Resource
 {
     protected static ?string $model = ClassRoom::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'المدخلات الأولية';
+
+    // protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string  $modelLabel = 'قاعة التدريب';
 
@@ -34,9 +36,9 @@ class ClassRoomResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->label('اسم القاعة')
                     ->unique(ignoreRecord: true)
-                    ->validationMessages(
-                        ['unique' => 'توجد قاعدة تدريب بهذا الاسم']
-                    )
+                    ->validationMessages([
+                        'unique' => 'توجد قاعدة تدريب بهذا الاسم'
+                    ])
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('capacity')
@@ -60,15 +62,6 @@ class ClassRoomResource extends Resource
                     ->numeric(),
                 Tables\Columns\TextColumn::make('room_no')
                     ->label('رقم القاعة')
-                    ->numeric(),
-                // Tables\Columns\TextColumn::make('created_at')
-                //     ->dateTime()
-                //     ->sortable()
-                //     ->toggleable(isToggledHiddenByDefault: true),
-                // Tables\Columns\TextColumn::make('updated_at')
-                //     ->dateTime()
-                //     ->sortable()
-                //     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

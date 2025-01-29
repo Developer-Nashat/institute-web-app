@@ -19,11 +19,16 @@ use Illuminate\Database\Eloquent\Builder;
 class DiplomaResource extends Resource
 {
     protected static ?string $model = Diploma::class;
+
+    protected static ?string $navigationGroup = 'المدخلات الأولية';
+
     protected static ?string $pluralModelLabel = 'الدبلومات';
+
     protected static ?string $navigationLabel = 'الدبلومات';
+
     protected static ?string $modelLabel = 'الدبلوم';
+
     protected static ?int $navigationSort = 2;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     // protected static ?string $recordTitleAttribute = 'دبلوم';
 
@@ -40,11 +45,9 @@ class DiplomaResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('dip_name')
-                    ->label('اسم الدبلوم')
-                    ->searchable(),
+                    ->label('اسم الدبلوم'),
                 TextColumn::make('dip_price')
                     ->label('سعر الدبلوم')
-                    ->searchable()
                     ->numeric($decimalPlace = 2),
             ])
             ->filters([

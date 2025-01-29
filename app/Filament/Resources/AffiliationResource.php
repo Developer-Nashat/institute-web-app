@@ -22,7 +22,9 @@ class AffiliationResource extends Resource
 {
     protected static ?string $model = Affiliation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'المدخلات الأولية';
+
+    // protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string  $modelLabel = 'الجهة';
 
@@ -40,11 +42,9 @@ class AffiliationResource extends Resource
                     ->required()
                     ->label('اسم الجهة')
                     ->unique(ignoreRecord: true)
-                    ->validationMessages(
-                        [
-                            'unique' => 'توجد جهة بهذا الاسم'
-                        ]
-                    )
+                    ->validationMessages([
+                        'unique' => 'توجد جهة بهذا الاسم'
+                    ])
                     ->maxLength(255),
                 Forms\Components\TextInput::make('supervisor')
                     ->required()

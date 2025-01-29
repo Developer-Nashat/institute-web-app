@@ -17,10 +17,13 @@ class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'المدخلات الأولية';
 
     protected static ?string $pluralModelLabel = 'المواد';
+
     protected static ?string $modelLabel = 'المادة';
+
+
     protected static ?int $navigationSort = 1;
 
     // protected static ?string $title = 'Custom Page Title';

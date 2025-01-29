@@ -11,20 +11,6 @@ class Affiliation extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'aff_name',
-        'supervisor',
-        'aff_address',
-        'first_phone',
-        'second_phone',
-        'aff_email',
-    ];
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array

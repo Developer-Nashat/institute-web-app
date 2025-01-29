@@ -16,7 +16,7 @@ class ListCategories extends ListRecords
             Actions\CreateAction::make()
                 ->label('إضافة تصنيف')
                 ->modal()
-                ->modalWidth('xl')
+                ->modalWidth('lg')
                 // ->modelLabel('تصنيف')
                 ->modalHeading('إضافة تصنيف')
                 // ->modalCancelActionLabel('إلغاء')

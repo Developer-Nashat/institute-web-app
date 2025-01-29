@@ -34,6 +34,10 @@ class Diploma extends Model
     {
         return [
             TextInput::make('dip_name')
+                ->unique(ignoreRecord: true)
+                ->validationMessages([
+                    'unique' => 'يوجد دبلوم بهذا الاسم'
+                ])
                 ->label('اسم الدبلوم'),
             TextInput::make('dip_price')
                 ->label('سعر الدبلوم')
