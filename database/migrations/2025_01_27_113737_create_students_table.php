@@ -15,10 +15,20 @@ return new class extends Migration
 
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->text('std_img')->nullable();
-            $table->string('std_id_no')->nullable();
-            $table->foreignUuid('people_id')->constrained('people');
+            $table->string('ar_name')->unique();
+            $table->string('en_name')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->char('student_gender')->nullable();
+            $table->string('student_email')->unique()->nullable();
+            $table->string('first_phone', 15)->nullable();
+            $table->string('second_phone', 15)->nullable();
+            $table->text('student_address')->nullable();
+            $table->foreignId('nationalty_id')->constrained('nationalities');
+            $table->text('student_img')->nullable();
+            $table->string('student_id_no')->nullable();
             $table->timestamps();
+
+            $table->unique(['ar_name', 'en_name', 'student_id_no']);
         });
 
         Schema::enableForeignKeyConstraints();

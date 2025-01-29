@@ -22,11 +22,11 @@ class DiplomaResource extends Resource
     protected static ?string $pluralModelLabel = 'الدبلومات';
     protected static ?string $navigationLabel = 'الدبلومات';
     protected static ?string $modelLabel = 'الدبلوم';
+    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     // protected static ?string $recordTitleAttribute = 'دبلوم';
-    protected static ?int $navigationSort = 2;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
 
     public static function form(Form $form): Form

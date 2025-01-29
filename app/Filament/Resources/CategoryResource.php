@@ -19,8 +19,8 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $modelLabel = 'التصنيف';
-    protected static ?string $pluralModelLabel = 'التصنيفات';
+    protected static ?string $modelLabel = 'تصنيف المواد';
+    protected static ?string $pluralModelLabel = 'تصنيفات المواد';
 
     protected static ?int $navigationSort = 0;
 

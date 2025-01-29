@@ -1,0 +1,171 @@
+models:
+  Category:
+    cat_name: string
+    relationships:
+      hasMany: Subject
+
+  Subject:
+    sub_name: string unique
+    sub_price: decimal
+    durationt_type: string nullable
+    total_hours: smallinteger nullable
+    total_days: smallinteger nullable
+    category_id: id foreign:categories
+
+  Diploma:
+    dip_name: string unique
+    dip_price: decimal nullable
+
+  Position:
+    position_name: string
+    relationships:
+      hasMany: Staff
+
+  Specialization:
+    specialization_name: string
+    relationships:
+      belongsToMany: Staff
+
+  Nationality:
+    name: string unique
+
+  Student:
+    ar_name: string, unique
+    en_name: string nullable
+    date_of_birth: date nullable
+    student_gender: char default(M) nullable
+    student_email: string email unique nullable
+    first_phone: string:15 nullable
+    second_phone: string:15 nullable
+    person_address: text nullable
+    nationalty_id: id foreign:nationalities
+    student_img: text nullable
+    student_id_no: sting nullable
+    people_id: id foreign
+    relationships:
+      belongsToMany: Course
+
+  StudentDiploma:
+    student_id: id foreign
+    diploma_id: id foreign
+
+  Staff:
+    ar_name: string, unique
+    en_name: string nullable
+    date_of_birth: date nullable
+    staff_gender: char default(M) nullable
+    staff_email: string email unique nullable
+    first_phone: string:15 nullable
+    second_phone: string:15 nullable
+    staff_address: text nullable
+    nationalty_id: id foreign:nationalities
+    staff_salary: decimal
+    staff_percentage: decimal
+    position_id: id foreign nullable
+    is_teacher: boolean default(true)
+    staff_id_no: sting nullable
+    relationships:
+      belongsToMany: Specialization
+
+  ClassRoom:
+    name: string
+    capacity: smallinteger
+    status: string nullable
+    room_no: smallinteger nullable
+    relationships:
+      hasMany: AffiliationClassRoom
+
+  Affiliation:
+    aff_name: string
+    supervisor: string
+    aff_address: text
+    first_phone: string:15 nullable
+    second_phone: string:15 nullable
+    aff_email: string nullable
+    relationships:
+      hasMany: AffiliationClassRoom
+
+  AffiliationClassRoom:
+    affiliation_id: id foreign:affiliations
+    class_room_id: id foreign:class_rooms
+    rent_price: decimal nullable
+    reg_date: date nullable
+    start_date: date nullable
+    end_date: date nullable
+    start_time: time nullable
+    end_time: time nullable
+    period: chart nullable default("N")
+    relationships:
+      belongsTo: Affiliation, ClassRoom
+
+  CompleteAffiliationClassRoom:
+    affiliation_id: id foreign:affiliations
+    class_room_id: id foreign:class_rooms
+    rent_price: decimal nullable
+    reg_date: date nullable
+    start_date: date nullable
+    end_date: date nullable
+    start_time: time nullable
+    end_time: time nullable
+    period: chart nullable default("N")
+    relationships:
+      belongsTo: Affiliation, ClassRoom
+
+  GradeEvaluation:
+    name: string
+    grade_max: smallinteger
+    grade_min: smallinteger
+
+  Course:
+    course_name: string unique
+    teacher_id: id foreign:staff
+    subject_id: id foreign
+    diploma_id: id foreign nullable
+    class_room_id: id foreign:class_rooms
+    reg_date: date nullable
+    start_date: date nullable
+    end_date: date nullable
+    start_time: time nullable
+    end_time: time nullable
+    period: chart nullable default("N")
+    days: Json nullable
+    status: string nullable
+    relationships:
+      belongsToMany: Student
+
+  CompleteMasterCourse:
+    course_name: string unique
+    teacher_id: id foreign:staff
+    subject_id: id foreign
+    class_room_id: id foreign:class_rooms
+    diploma_id: id foreign nullable
+    reg_date: date nullable
+    start_date: date nullable
+    end_date: date nullable
+    start_time: time nullable
+    end_time: time nullable
+    period: chart nullable default("N")
+    days: Json nullable
+    status: string nullable
+    relationships:
+      belongsToMany: Student
+
+  StudentCourseResult:
+    course_id: id foreign
+    student_id: id foreign
+    student_mark: decimal 4, 2
+    grade_evaluation_id: id foreign
+
+  StudentAttendance:
+    course_id: id foreign
+    student_id: id foreign
+    attendance_date: date
+    attendance_status: string
+
+  Certificate:
+    student_id: id foreign
+    course_id: id foreign
+    certificate_no: string unique
+    issue_date: date nullable
+    expiration_date: date nullable
+    status: string nullable

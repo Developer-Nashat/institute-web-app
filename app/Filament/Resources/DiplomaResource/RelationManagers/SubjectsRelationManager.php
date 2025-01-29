@@ -57,7 +57,8 @@ class SubjectsRelationManager extends RelationManager
                     ->preloadRecordSelect()
                 // ->slideOver(),
 
-            ])
+            ])->reorderable('order')
+            ->defaultSort('order', 'asc')
             ->actions([
                 Tables\Actions\DetachAction::make(),
                 Tables\Actions\EditAction::make()

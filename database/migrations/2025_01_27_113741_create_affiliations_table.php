@@ -15,12 +15,12 @@ return new class extends Migration
 
         Schema::create('affiliations', function (Blueprint $table) {
             $table->id();
-            $table->string('aff_name');
+            $table->string('name');
             $table->string('supervisor');
-            $table->text('aff_address');
+            $table->text('address')->nullable();
             $table->string('first_phone', 15)->nullable();
             $table->string('second_phone', 15)->nullable();
-            $table->string('aff_email')->nullable();
+            $table->string('email')->email()->nullable();
             $table->timestamps();
         });
 

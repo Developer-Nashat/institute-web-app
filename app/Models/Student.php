@@ -4,23 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Student extends Model
 {
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'std_img',
-        'std_id_no',
-        'people_id',
-    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -37,8 +25,8 @@ class Student extends Model
         return $this->belongsToMany(Course::class);
     }
 
-    public function person(): BelongsTo
+    public function nationality()
     {
-        return $this->belongsTo(Person::class);
+        return $this->belongsTo(Nationality::class);
     }
 }

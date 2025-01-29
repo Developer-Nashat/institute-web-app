@@ -12,18 +12,6 @@ class Staff extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'staff_salary',
-        'staff_percentage',
-        'position_id',
-        'is_teacher',
-    ];
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -44,5 +32,10 @@ class Staff extends Model
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
+    }
+
+    public function nationality()
+    {
+        return $this->belongsTo(Nationality::class);
     }
 }
