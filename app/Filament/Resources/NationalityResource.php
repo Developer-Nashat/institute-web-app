@@ -30,17 +30,7 @@ class NationalityResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->unique(ignoreRecord: true)
-                    ->validationMessages([
-                        'unique' => 'توجد جنسية بهذا الاسم'
-                    ])
-                    ->label('الجنسية')
-                    ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
-            ]);
+            ->schema(Nationality::getForm);
     }
 
     public static function table(Table $table): Table

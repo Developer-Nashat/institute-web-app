@@ -16,13 +16,11 @@ use Illuminate\Database\Eloquent\Builder;
 class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
-
     protected static ?string $navigationGroup = 'المدخلات الأولية';
 
     protected static ?string $pluralModelLabel = 'المواد';
 
     protected static ?string $modelLabel = 'المادة';
-
 
     protected static ?int $navigationSort = 1;
 

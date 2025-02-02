@@ -109,7 +109,6 @@ class AffiliationResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
-
                     Tables\Actions\EditAction::make()
                         ->color('primary')
                         ->slideOver(),

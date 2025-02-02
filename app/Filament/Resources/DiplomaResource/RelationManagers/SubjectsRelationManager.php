@@ -12,7 +12,7 @@ use Filament\Tables\Table;
 class SubjectsRelationManager extends RelationManager
 {
     protected static string $relationship = 'subjects';
-    protected static ?string $modelLabel = 'المواد';
+    protected static ?string $modelLabel = 'المادة';
 
     public function isReadOnly(): bool
     {
@@ -49,6 +49,7 @@ class SubjectsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make()
                     ->color('info')
+                    ->preloadRecordSelect()
                     ->form(fn(AttachAction $action): array => [
                         $action->getRecordSelect(),
                         TextInput::make('order')

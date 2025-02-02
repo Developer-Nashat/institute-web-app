@@ -28,15 +28,16 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('')
             ->login()
-            ->profile()
+            ->spa()
+            ->brandName('نظام المعاهد ومراكز التدريب')
             ->colors([
                 'primary' => Color::Amber,
-            ])->brandName('Institute Web App')
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
-            ])->spa()
+            ])
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('المدخلات الأولية')

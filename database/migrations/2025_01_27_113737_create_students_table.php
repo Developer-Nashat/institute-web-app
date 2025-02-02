@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('ar_name')->unique();
             $table->string('en_name')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->char('student_gender')->nullable();
+            $table->char('student_gender', 1)->nullable();
             $table->string('student_email')->unique()->nullable();
             $table->string('first_phone', 15)->nullable();
             $table->string('second_phone', 15)->nullable();

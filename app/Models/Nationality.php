@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,4 +27,20 @@ class Nationality extends Model
     protected $casts = [
         'id' => 'integer',
     ];
+
+    public static function getform()
+    {
+        return
+            [
+                TextInput::make('name')
+                    ->unique(ignoreRecord: true)
+                    ->validationMessages([
+                        'unique' => 'توجد جنسية بهذا الاسم'
+                    ])
+                    ->label('الجنسية')
+                    ->required()
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+            ];
+    }
 }

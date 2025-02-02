@@ -25,7 +25,7 @@ class SpecializationResource extends Resource
 
     protected static ?string  $navigationLabel = 'التخصصات';
 
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 7;
 
     public static function getNavigationBadge(): ?string
     {
