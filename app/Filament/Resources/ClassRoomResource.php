@@ -17,7 +17,7 @@ class ClassRoomResource extends Resource
 {
     protected static ?string $model = ClassRoom::class;
 
-    protected static ?string $navigationGroup = 'المدخلات الأولية';
+    protected static ?string $navigationGroup = 'المدخلات الإدارية';
 
     // protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

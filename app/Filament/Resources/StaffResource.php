@@ -32,9 +32,11 @@ class StaffResource extends Resource
 {
     protected static ?string $model = Staff::class;
 
-    protected static ?string $navigationGroup = 'المدخلات الأولية';
+    protected static ?string $navigationGroup = 'المدخلات الإدارية';
 
     protected static ?string $pluralModelLabel = 'الموظفين';
+
+    protected static ?string $navigationLabel = 'الموظفين';
 
     protected static ?string $modelLabel = 'الموظف';
 

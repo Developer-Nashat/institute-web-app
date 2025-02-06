@@ -23,13 +23,15 @@ class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
 
-    protected static ?string $navigationGroup = 'المدخلات الأولية';
+    protected static ?string $navigationGroup = 'المدخلات الإدارية';
 
     protected static ?string $pluralModelLabel = 'الطلاب';
 
+    protected static ?string $navigationLabel = 'الطلاب';
+
     protected static ?string $modelLabel = 'الطالب';
 
-    protected static ?int $navigationSort = 9;
+    protected static ?int $navigationSort = 7;
 
     public static function form(Form $form): Form
     {

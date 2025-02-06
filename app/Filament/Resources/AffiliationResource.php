@@ -22,7 +22,7 @@ class AffiliationResource extends Resource
 {
     protected static ?string $model = Affiliation::class;
 
-    protected static ?string $navigationGroup = 'المدخلات الأولية';
+    protected static ?string $navigationGroup = 'المدخلات الإدارية';
 
     // protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

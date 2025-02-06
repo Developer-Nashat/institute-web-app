@@ -40,11 +40,11 @@ class AppPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 NavigationGroup::make()
-                    ->label('المدخلات الأولية')
+                    ->label('المدخلات الإدارية')
                     ->icon('heroicon-o-bars-4'),
                 NavigationGroup::make()
-                    ->label('Blog')
-                    ->icon('heroicon-o-pencil'),
+                    ->label('العمليات الإدارية')
+                    ->icon('heroicon-o-book-open'),
                 NavigationGroup::make()
                     ->label(fn(): string => __('navigation.settings'))
                     ->icon('heroicon-o-cog-6-tooth')

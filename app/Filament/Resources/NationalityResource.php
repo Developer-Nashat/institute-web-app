@@ -17,7 +17,7 @@ class NationalityResource extends Resource
 {
     protected static ?string $model = Nationality::class;
 
-    protected static ?string $navigationGroup = 'المدخلات الأولية';
+    protected static ?string $navigationGroup = 'المدخلات الإدارية';
 
     protected static ?string  $modelLabel = 'الجنسية';
 
@@ -30,7 +30,7 @@ class NationalityResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema(Nationality::getForm);
+            ->schema(Nationality::getForm());
     }
 
     public static function table(Table $table): Table

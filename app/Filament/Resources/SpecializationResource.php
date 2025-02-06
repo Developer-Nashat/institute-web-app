@@ -11,13 +11,12 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SpecializationResource extends Resource
 {
     protected static ?string $model = Specialization::class;
 
-    protected static ?string $navigationGroup = 'المدخلات الأولية';
+    protected static ?string $navigationGroup = 'المدخلات الإدارية';
 
     protected static ?string  $modelLabel = 'التخصص';
 
@@ -25,17 +24,17 @@ class SpecializationResource extends Resource
 
     protected static ?string  $navigationLabel = 'التخصصات';
 
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 9;
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return static::getModel()::count();
+    // }
 
-    public static function getNavigationBadgeTooltip(): ?string
-    {
-        return 'عدد التخصصات';
-    }
+    // public static function getNavigationBadgeTooltip(): ?string
+    // {
+    //     return 'عدد التخصصات';
+    // }
 
     public static function form(Form $form): Form
     {

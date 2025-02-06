@@ -20,7 +20,7 @@ class DiplomaResource extends Resource
 {
     protected static ?string $model = Diploma::class;
 
-    protected static ?string $navigationGroup = 'المدخلات الأولية';
+    protected static ?string $navigationGroup = 'المدخلات الإدارية';
 
     protected static ?string $pluralModelLabel = 'الدبلومات';
 

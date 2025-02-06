@@ -17,7 +17,7 @@ class PositionResource extends Resource
 {
     protected static ?string $model = Position::class;
 
-    protected static ?string $navigationGroup = 'المدخلات الأولية';
+    protected static ?string $navigationGroup = 'المدخلات الإدارية';
 
     protected static ?string  $modelLabel = 'الوظيفة';
 

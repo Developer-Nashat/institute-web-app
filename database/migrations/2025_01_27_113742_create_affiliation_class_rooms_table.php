@@ -23,8 +23,10 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
-            $table->string('period')->nullable();
+            $table->char('period', 1)->nullable();
             $table->timestamps();
+
+            $table->index(['start_date', 'end_date', 'start_time', 'end_time']);
         });
 
         Schema::enableForeignKeyConstraints();
