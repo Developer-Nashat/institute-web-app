@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AffiliationClassRoomStatus;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Section;
@@ -102,6 +103,7 @@ class AffiliationClassRoom extends Model
                                         return $query->whereNotIn('id', function ($subQuery) use ($start_date, $end_date, $start_time, $end_time) {
                                             $subQuery->select('class_room_id')
                                                 ->from('affiliation_class_rooms')
+                                                ->whereIn('status', ['active', 'pending'])
                                                 ->where(function ($q) use ($start_date, $end_date, $start_time, $end_time) {
                                                     // Check for overlapping schedules
                                                     $q->where(function ($q) use ($start_date, $end_date, $start_time, $end_time) {
@@ -116,6 +118,7 @@ class AffiliationClassRoom extends Model
                                         $subQuery->union(
                                             DB::table('courses')
                                                 ->select('class_room_id')
+                                                ->whereIn('status', ['active', 'reserved'])
                                                 ->where(function ($q) use ($start_date, $end_date, $start_time, $end_time) {
                                                     // Check for overlapping courses
                                                     $q->whereDate('start_date', '<=', $end_date)
@@ -138,7 +141,17 @@ class AffiliationClassRoom extends Model
                                         'D' => 'صباحي',
                                         'N' => 'مسائي'
                                     ]
-                                ),
+                                )->native(false),
+                            Select::make('status')
+                                ->label('الحالة')
+                                ->options(
+                                    [
+                                        'panding' =>   'محجوز',
+                                        'completed' =>   'إكتملت'
+
+                                    ]
+                                )->default('panding')
+                                ->native(false),
                         ]
                     )->columns(2)
             ];

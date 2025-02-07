@@ -83,7 +83,7 @@ class Staff extends Model
                                 ->options([
                                     'M' => 'ذكر',
                                     'F' => 'أنثى'
-                                ])
+                                ])->native(false)
                                 ->default('M'),
                             Select::make('nationality_id')
                                 ->label('الجنسية')
@@ -91,7 +91,7 @@ class Staff extends Model
                                 ->required()
                                 ->validationMessages([
                                     'required' => 'يجب ان تختر الجنسية',
-                                ])
+                                ])->native(false)
                                 ->searchable()
                                 ->preload()
                                 ->createOptionForm(Nationality::getform())
@@ -100,6 +100,7 @@ class Staff extends Model
                                 ->relationship('position', 'position_name')
                                 ->label('الوظيفة')
                                 ->required()
+                                ->native(false)
                                 ->validationMessages([
                                     'required' => 'يجب ان تختر الوظيفة',
                                 ])

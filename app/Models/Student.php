@@ -55,6 +55,7 @@ class Student extends Model
                                     'M' => 'ذكر',
                                     'F' => 'أنثى'
                                 ])
+                                ->native(false)
                                 ->default('M'),
                             Select::make('nationality_id')
                                 ->label('الجنسية')
@@ -63,6 +64,7 @@ class Student extends Model
                                 ->validationMessages([
                                     'required' => 'يجب ان تختر الجنسية',
                                 ])
+                                ->native(false)
                                 ->searchable()
                                 ->preload()
                                 ->createOptionForm(Nationality::getform())

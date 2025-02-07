@@ -5,14 +5,11 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AffiliationClassRoomResource\Pages;
 use App\Filament\Resources\AffiliationClassRoomResource\RelationManagers;
 use App\Models\AffiliationClassRoom;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AffiliationClassRoomResource extends Resource
 {
@@ -45,6 +42,21 @@ class AffiliationClassRoomResource extends Resource
                     ->label('القاعة'),
                 Tables\Columns\TextColumn::make('rent_price')
                     ->label('مبلغ الإيجار'),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('الحالة')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'active' => 'success',
+                        'completed' => 'primary',
+                        'cancelled' => 'danger',
+                    })
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'pending' => 'معلق',
+                        'active' => 'نشط',
+                        'completed' => 'مكتمل',
+                        'cancelled' => 'ملغي'
+                    }),
                 Tables\Columns\TextColumn::make('reg_date')
                     ->label('تاريخ التسجيل')
                     ->date(),
@@ -60,20 +72,45 @@ class AffiliationClassRoomResource extends Resource
                     ->label('توقيت الإنتهاء'),
                 Tables\Columns\TextColumn::make('period')
                     ->label('الفترة')
-                    ->getStateUsing(function ($record) {
-                        return $record->period === 'D' ? 'صباحي' : 'مسائي';
-                    })
+                    ->formatStateUsing(fn($state) => $state === 'D' ? 'صباحي' : 'مسائي')
+                    ->badge()
+                    ->color(fn($state) => $state === 'D' ? 'info' : 'warning')
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('الحالة')
+                    ->options([
+                        'pending' => 'محجوز',
+                        'active' => 'نشط',
+                        'completed' => 'مكتمل',
+                        'cancelled' => 'ملغي'
+                    ])->native(false),
+
+                Tables\Filters\SelectFilter::make('period')
+                    ->label('الفترة')
+                    ->options([
+                        'D' => 'صباحي',
+                        'E' => 'مسائي'
+                    ])->native(false)
             ])
             ->actions([
-                ActionGroup::make(
-                    [
-                        Tables\Actions\EditAction::make(),
-                        Tables\Actions\DeleteAction::make(),
-                    ]
-                )
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\Action::make('activate')
+                        ->label('تفعيل')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->action(function (AffiliationClassRoom $record) {
+                            $record->update(['status' => 'active']);
+                        })
+                        ->hidden(fn($record) => $record->status !== 'pending'),
+
+                    Tables\Actions\EditAction::make()
+                        ->color('primary'),
+
+                    Tables\Actions\DeleteAction::make()
+                        ->color('danger'),
+                ])->label('الإجراءات')->tooltip('الإجراءات')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -95,6 +132,7 @@ class AffiliationClassRoomResource extends Resource
             'index' => Pages\ListAffiliationClassRooms::route('/'),
             'create' => Pages\CreateAffiliationClassRoom::route('/create'),
             'edit' => Pages\EditAffiliationClassRoom::route('/{record}/edit'),
+            'view' => Pages\ViewAffiliationClassRoom::route('/{record}'),
         ];
     }
 }
