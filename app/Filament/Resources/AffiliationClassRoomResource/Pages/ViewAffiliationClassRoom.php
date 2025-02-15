@@ -7,7 +7,10 @@ use Filament\Actions;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Support\Facades\Auth;
 
 class ViewAffiliationClassRoom extends ViewRecord
 {
@@ -77,7 +80,7 @@ class ViewAffiliationClassRoom extends ViewRecord
             Actions\Action::make('activate')
                 ->label('تفعيل')
                 ->icon('heroicon-o-check-circle')
-                ->color('success')
+                ->color('info')
                 ->action(function () {
                     $this->record->update(['status' => 'active']);
                     $this->refresh();
@@ -89,7 +92,7 @@ class ViewAffiliationClassRoom extends ViewRecord
             Actions\Action::make('complete')
                 ->label('إكمال')
                 ->icon('heroicon-o-check-badge')
-                ->color('info')
+                ->color('success')
                 ->action(function () {
                     $this->record->update(['status' => 'completed']);
                     $this->refresh();
@@ -109,6 +112,18 @@ class ViewAffiliationClassRoom extends ViewRecord
                 ->visible(fn() => in_array($this->record->status, ['pending', 'active']))
                 ->requiresConfirmation()
                 ->successNotificationTitle('تم الإلغاء بنجاح'),
+
+            // Actions\Action::make('show')
+            //     ->action(function () {
+            //         Notification::make()
+            //             ->title('قاعات بحاجة إلى التفعيل')
+            //             ->actions([
+            //                 Action::make('view')
+            //                     ->label('عرض القائمة')
+            //                     ->button()
+            //                     ->url(AffiliationClassRoomResource::getUrl('index')),
+            //             ])->sendToDatabase(Auth::user());
+            //     })
         ];
     }
 }

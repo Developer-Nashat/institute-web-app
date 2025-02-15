@@ -15,7 +15,7 @@ enum AffiliationClassRoomStatus: string
         return match ($this) {
             self::pending => 'orange',
             self::completed => 'success',
-            self::active => 'danger',
+            self::active => 'info',
             self::cancelled => 'gray',
         };
     }

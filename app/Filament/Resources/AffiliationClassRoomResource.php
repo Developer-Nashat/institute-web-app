@@ -8,13 +8,11 @@ use App\Models\AffiliationClassRoom;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Table;
 
 class AffiliationClassRoomResource extends Resource
 {
     protected static ?string $model = AffiliationClassRoom::class;
-
 
     protected static ?string $navigationGroup = 'العمليات الإدارية';
 
@@ -37,9 +35,11 @@ class AffiliationClassRoomResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('affiliation.name')
-                    ->label('اسم الجهة'),
+                    ->label('اسم الجهة')
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('classRoom.name')
-                    ->label('القاعة'),
+                    ->label('القاعة')
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('rent_price')
                     ->label('مبلغ الإيجار'),
                 Tables\Columns\TextColumn::make('status')
@@ -47,8 +47,8 @@ class AffiliationClassRoomResource extends Resource
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'pending' => 'warning',
-                        'active' => 'success',
-                        'completed' => 'primary',
+                        'active' => 'info',
+                        'completed' => 'success',
                         'cancelled' => 'danger',
                     })
                     ->formatStateUsing(fn(string $state): string => match ($state) {
@@ -57,9 +57,9 @@ class AffiliationClassRoomResource extends Resource
                         'completed' => 'مكتمل',
                         'cancelled' => 'ملغي'
                     }),
-                Tables\Columns\TextColumn::make('reg_date')
-                    ->label('تاريخ التسجيل')
-                    ->date(),
+                // Tables\Columns\TextColumn::make('reg_date')
+                //     ->label('تاريخ التسجيل')
+                //     ->date(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->label('تاريخ البدء')
                     ->date(),

@@ -25,9 +25,9 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
-            $table->string('period')->nullable();
+            $table->string('status', 10)->nullable();
+            $table->char('period', 1)->nullable();
             $table->json('days')->nullable();
-            $table->string('status')->nullable();
             $table->timestamps();
         });
 

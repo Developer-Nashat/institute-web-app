@@ -31,6 +31,7 @@ class AffiliationClassRoom extends Model
         'reg_date' => 'date',
         'start_date' => 'date',
         'end_date' => 'date',
+        // 'status' => AffiliationClassRoomStatus::class
     ];
 
 
@@ -68,11 +69,13 @@ class AffiliationClassRoom extends Model
                                 ->schema([
                                     TimePicker::make('start_time')
                                         ->label('من')
+                                        ->seconds(false)
                                         ->live()
                                         ->afterStateUpdated(function ($set) {
                                             $set('class_room_id', null); // Clear the selected classroom when end_time changes
                                         }),
                                     TimePicker::make('end_time')
+                                        ->seconds(false)
                                         ->label('الي')
                                         ->live()
                                         ->afterStateUpdated(function ($set) {
@@ -93,6 +96,7 @@ class AffiliationClassRoom extends Model
                                         $end_date = $get('end_date');
                                         $start_time = $get('start_time');
                                         $end_time = $get('end_time');
+                                        $currentClassRoomId = $get('class_room_id'); // Get the currently selected classroom ID
 
                                         // If any of the required fields are missing, return the unmodified query
                                         if (!$start_date || !$end_date || !$start_time || !$end_time) {
@@ -100,7 +104,7 @@ class AffiliationClassRoom extends Model
                                         }
 
                                         // Query to find classrooms that are not occupied
-                                        return $query->whereNotIn('id', function ($subQuery) use ($start_date, $end_date, $start_time, $end_time) {
+                                        $query->whereNotIn('id', function ($subQuery) use ($start_date, $end_date, $start_time, $end_time) {
                                             $subQuery->select('class_room_id')
                                                 ->from('affiliation_class_rooms')
                                                 ->whereIn('status', ['active', 'pending'])
@@ -115,20 +119,15 @@ class AffiliationClassRoom extends Model
                                                 });
                                         });
 
-                                        $subQuery->union(
-                                            DB::table('courses')
-                                                ->select('class_room_id')
-                                                ->whereIn('status', ['active', 'reserved'])
-                                                ->where(function ($q) use ($start_date, $end_date, $start_time, $end_time) {
-                                                    // Check for overlapping courses
-                                                    $q->whereDate('start_date', '<=', $end_date)
-                                                        ->whereDate('end_date', '>=', $start_date)
-                                                        ->whereTime('start_time', '<=', $end_time)
-                                                        ->whereTime('end_time', '>=', $start_time);
-                                                })
-                                        );
+                                        // Include the currently selected classroom in the results
+                                        if ($currentClassRoomId) {
+                                            $query->orWhere('id', $currentClassRoomId);
+                                        }
+
+                                        return $query;
                                     }
-                                )->required(),
+                                )
+                                ->required(),
                             TextInput::make('rent_price')
                                 ->label('مبلغ الإيجار')
                                 ->mask(RawJs::make('$money($input)'))
@@ -146,11 +145,11 @@ class AffiliationClassRoom extends Model
                                 ->label('الحالة')
                                 ->options(
                                     [
-                                        'panding' =>   'محجوز',
+                                        'pending' =>   'معلق',
                                         'completed' =>   'إكتملت'
 
                                     ]
-                                )->default('panding')
+                                )->default('pending')
                                 ->native(false),
                         ]
                     )->columns(2)
