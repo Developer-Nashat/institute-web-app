@@ -19,6 +19,11 @@ class SubjectsRelationManager extends RelationManager
         return false;
     }
 
+    public function hasCombinedRelationManagerTabsWithContent(): bool
+    {
+        return true;
+    }
+
     public function form(Form $form): Form
     {
         return $form

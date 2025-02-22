@@ -83,7 +83,7 @@ class ViewAffiliationClassRoom extends ViewRecord
                 ->color('info')
                 ->action(function () {
                     $this->record->update(['status' => 'active']);
-                    $this->refresh();
+                    $this->record->refresh();
                 })
                 ->visible(fn() => $this->record->status === 'pending')
                 ->requiresConfirmation()
@@ -95,7 +95,7 @@ class ViewAffiliationClassRoom extends ViewRecord
                 ->color('success')
                 ->action(function () {
                     $this->record->update(['status' => 'completed']);
-                    $this->refresh();
+                    $this->record->refresh();
                 })
                 ->visible(fn() => $this->record->status === 'active')
                 ->requiresConfirmation()
@@ -107,7 +107,7 @@ class ViewAffiliationClassRoom extends ViewRecord
                 ->color('danger')
                 ->action(function () {
                     $this->record->update(['status' => 'cancelled']);
-                    $this->refresh();
+                    $this->record->refresh();
                 })
                 ->visible(fn() => in_array($this->record->status, ['pending', 'active']))
                 ->requiresConfirmation()

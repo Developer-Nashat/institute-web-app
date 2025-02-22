@@ -61,7 +61,6 @@ class Diploma extends Model
         // );
 
         return $this->belongsToMany(Subject::class)
-            ->withPivot(['order'])
-            ->withTimestamps();
+            ->withPivot(['order']);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\AffiliationClassRoomStatus;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Section;
@@ -14,7 +13,6 @@ use Filament\Support\RawJs;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\DB;
 
 class AffiliationClassRoom extends Model
 {

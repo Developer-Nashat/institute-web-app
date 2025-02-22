@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('course_student', function (Blueprint $table) {
-            $table->foreignId('course_id');
+            $table->foreignUuid('course_id');
             $table->foreignId('student_id');
         });
 

@@ -9,3 +9,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command('check:pending-class-rooms')->everyMinute();
+
+Schedule::command('check:pending-class-rooms-for-course')->everyMinute();

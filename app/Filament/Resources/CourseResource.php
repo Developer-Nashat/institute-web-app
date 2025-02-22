@@ -4,19 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CourseResource\Pages;
 use App\Filament\Resources\CourseResource\RelationManagers;
+use App\Filament\Resources\CourseResource\RelationManagers\StudentRelationManager;
 use App\Models\Course;
-use App\Models\Staff;
-use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup as ActionsActionGroup;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class CourseResource extends Resource
 {
@@ -26,225 +21,179 @@ class CourseResource extends Resource
 
     protected static ?string $navigationGroup = 'العمليات الإدارية';
 
-    protected static ?string  $modelLabel = 'الدورة';
+    protected static ?string $modelLabel = 'الدورة';
 
-    protected static ?string  $pluralModelLabel = 'الدورات';
+    protected static ?string $pluralModelLabel = 'الدورات';
 
-    protected static ?string  $navigationLabel = 'الدورات';
+    protected static ?string $navigationLabel = 'الدورات';
 
     protected static ?int $navigationSort = 2;
+
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Section::make('معلومات الدورة')
-                    ->schema([
-                        Forms\Components\TextInput::make('course_name')
-                            ->label('اسم الدورة')
-                            ->required()
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true)
-                            ->validationMessages([
-                                'unique' => 'توجد دورة بهذا الاسم'
-                            ]),
-                        Forms\Components\Select::make('teacher_id')
-                            ->relationship(
-                                'teacher',
-                                'ar_name',
-                                modifyQueryUsing: fn(Builder $query) => $query->where('is_teacher', true),
-                            )
-                            ->required()
-                            ->validationMessages([
-                                'required' => 'يجب ان تختر المدرس',
-                            ])->native(false)
-                            ->label('المدرس')
-                            ->searchable()
-                            ->preload(),
-                        Forms\Components\Select::make('subject_id')
-                            ->relationship('subject', 'sub_name')
-                            ->label('المادة')
-                            ->required()
-                            ->validationMessages([
-                                'required' => 'يجب ان تختر المادة',
-                            ])->native(false)
-                            ->searchable()
-                            ->preload(),
-                        Forms\Components\Select::make('diploma_id')
-                            ->relationship('diploma', 'dip_name')
-                            ->label('الدبلوم'),
-
-                        // DatePicker::make('reg_date')
-                        //     ->label('تاريخ التسجيل'),
-                    ])->columns(2)
-                    ->collapsible(),
-                Section::make('مواعيد الدورة')
-                    ->schema([
-                        DatePicker::make('start_date')
-                            ->label('تاريخ البدء')
-                            ->live()
-                            ->afterStateUpdated(function ($set) {
-                                $set('class_room_id', null); // Clear the selected classroom when end_time changes
-                            }),
-                        DatePicker::make('end_date')
-                            ->label('تاريخ الإنتهاء')
-                            ->live()
-                            ->afterStateUpdated(function ($set) {
-                                $set('class_room_id', null); // Clear the selected classroom when end_time changes
-                            }),
-                        TimePicker::make('start_time')
-                            ->seconds(false)
-                            ->label('من')
-                            ->live()
-                            ->afterStateUpdated(function ($set) {
-                                $set('class_room_id', null); // Clear the selected classroom when end_time changes
-                            }),
-                        TimePicker::make('end_time')
-                            ->seconds(false)
-                            ->label('الي')
-                            ->live()
-                            ->afterStateUpdated(function ($set) {
-                                $set('class_room_id', null); // Clear the selected classroom when end_time changes
-                            }),
-                        Forms\Components\CheckboxList::make('days')
-                            ->label('أيام الدورة')
-                            ->options([
-                                'saturday' => 'السبت',
-                                'sunday' => 'الاحد',
-                                'monday' => 'الاثنين',
-                                'tuesday' => 'الثلاثاء',
-                                'wednesday' => 'الاربعاء',
-                                'thursday' => 'الخميس',
-                                'friday' => 'الجمعة',
-                            ])->columnSpanFull()
-                            ->columns(7),
-                    ])
-                    ->columns(2)
-                    ->collapsible(),
-                Section::make('القاعة')
-                    ->schema([
-                        Select::make('class_room_id')
-                            ->label('القاعة')
-                            ->searchable()
-                            ->preload()
-                            ->relationship(
-                                'classRoom', // Relationship name
-                                'name',      // Display column
-                                modifyQueryUsing: function ($query, Get $get) {
-                                    $start_date = $get('start_date');
-                                    $end_date = $get('end_date');
-                                    $start_time = $get('start_time');
-                                    $end_time = $get('end_time');
-                                    $currentClassRoomId = $get('class_room_id'); // Get the currently selected classroom ID
-
-                                    // If any of the required fields are missing, return the unmodified query
-                                    if (!$start_date || !$end_date || !$start_time || !$end_time) {
-                                        return $query;
-                                    }
-
-                                    // Query to find classrooms that are not occupied
-                                    $query->whereNotIn('id', function ($subQuery) use ($start_date, $end_date, $start_time, $end_time) {
-                                        $subQuery->select('class_room_id')
-                                            ->from('affiliation_class_rooms')
-                                            ->whereIn('status', ['active', 'pending'])
-                                            ->where(function ($q) use ($start_date, $end_date, $start_time, $end_time) {
-                                                // Check for overlapping schedules
-                                                $q->where(function ($q) use ($start_date, $end_date, $start_time, $end_time) {
-                                                    $q->whereDate('start_date', '<=', $end_date)
-                                                        ->whereDate('end_date', '>=', $start_date)
-                                                        ->whereTime('start_time', '<=', $end_time)
-                                                        ->whereTime('end_time', '>=', $start_time);
-                                                });
-                                            });
-                                    });
-
-                                    // Include the currently selected classroom in the results
-                                    if ($currentClassRoomId) {
-                                        $query->orWhere('id', $currentClassRoomId);
-                                    }
-
-                                    return $query;
-                                }
-                            )
-                            ->required(),
-                    ]),
-                Section::make('الحالة')
-                    ->schema([
-                        Select::make('period')
-                            ->label('الفترة')
-                            ->options(
-                                [
-                                    'D' => 'صباحي',
-                                    'N' => 'مسائي'
-                                ]
-                            )->native(false),
-                        Select::make('status')
-                            ->label('الحالة')
-                            ->options(
-                                [
-                                    'pending' =>   'معلق',
-                                    'completed' =>   'إكتملت'
-
-                                ]
-                            )->default('pending')
-                            ->native(false),
-                    ])
-                    ->columns(2)
-                    ->collapsible(),
-            ]);
+            ->schema(Course::getForm());
     }
+
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID'),
-                Tables\Columns\TextColumn::make('course_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('teacher.id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('subject.id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('diploma.id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('classRoom.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('reg_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('start_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('end_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('start_time'),
-                Tables\Columns\TextColumn::make('end_time'),
-                Tables\Columns\TextColumn::make('period')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
+
+                // Course Name
+                TextColumn::make('course_name')
+                    ->label('اسم الدورة'),
+
+                // Teacher Name (from relationship)
+                TextColumn::make('teacher.ar_name')
+                    ->label('المدرس')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+
+                // Subject Name (from relationship)
+                TextColumn::make('subject.sub_name')
+                    ->label('المادة')
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                // Diploma Name (from relationship)
+                TextColumn::make('diploma.dip_name')
+                    ->label('الدبلوم')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                // Classroom Name (from relationship)
+                TextColumn::make('classRoom.name')
+                    ->label('القاعة'),
+
+                // Start Date
+                TextColumn::make('start_date')
+                    ->label('تاريخ البدء')
+                    ->date(),
+
+                // End Date
+                TextColumn::make('end_date')
+                    ->label('تاريخ الإنتهاء')
+                    ->date(),
+
+                // Start Time
+                TextColumn::make('start_time')
+                    ->label('من')
+                    ->time(),
+
+                // End Time
+                TextColumn::make('end_time')
+                    ->label('الي')
+                    ->time(),
+
+                // Days (formatted as a string)
+                TextColumn::make('days')
+                    ->label('أيام الدورة')
+                    ->formatStateUsing(function ($state) {
+                        // If $state is already an array, use it directly
+                        if (is_array($state)) {
+                            $daysArray = $state;
+                        } // If $state is a JSON string, decode it
+                        elseif (is_string($state) && json_decode($state, true) !== null) {
+                            $daysArray = json_decode($state, true);
+                        } // If $state is a serialized string, unserialize it
+                        elseif (is_string($state) && @unserialize($state) !== false) {
+                            $daysArray = unserialize($state);
+                        } // If $state is invalid, return a fallback message
+                        else {
+                            return 'غير متوفر';
+                        }
+
+                        // Ensure $daysArray is an array
+                        if (!is_array($daysArray)) {
+                            return 'غير متوفر';
+                        }
+
+                        // Define the days map with the desired order
+                        $daysMap = [
+                            'saturday' => 'السبت',
+                            'sunday' => 'الاحد',
+                            'monday' => 'الاثنين',
+                            'tuesday' => 'الثلاثاء',
+                            'wednesday' => 'الاربعاء',
+                            'thursday' => 'الخميس',
+                            'friday' => 'الجمعة',
+                        ];
+
+                        // Sort the $daysArray based on the order of keys in $daysMap
+                        $sortedDays = array_intersect_key($daysMap, array_flip($daysArray));
+
+                        // Convert the sorted days array to a readable string
+                        return implode(', ', $sortedDays);
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                // Status (formatted as معلق/إكتملت)
+                TextColumn::make('status')
+                    ->label('الحالة')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'active' => 'info',
+                        'completed' => 'success',
+                        'cancelled' => 'danger',
+                    })
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'pending' => 'معلق',
+                        'active' => 'نشط',
+                        'completed' => 'مكتمل',
+                        'cancelled' => 'ملغي'
+                    }),
+
+                // Period (formatted as صباحي/مسائي)
+                TextColumn::make('period')
+                    ->label('الفترة')
+                    ->label('الفترة')
+                    ->formatStateUsing(fn($state) => $state === 'D' ? 'صباحي' : 'مسائي')
+                    ->badge()
+                    ->color(fn($state) => $state === 'D' ? 'info' : 'warning'),
+
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('الحالة')
+                    ->options([
+                        'pending' => 'محجوز',
+                        'active' => 'نشط',
+                        'completed' => 'مكتمل',
+                        'cancelled' => 'ملغي'
+                    ])->native(false),
+
+                Tables\Filters\SelectFilter::make('period')
+                    ->label('الفترة')
+                    ->options([
+                        'D' => 'صباحي',
+                        'E' => 'مسائي'
+                    ])->native(false)
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Add actions like Edit, Delete, etc.
+                ActionsActionGroup::make(
+                    [
+                        Tables\Actions\ViewAction::make(),
+                        Tables\Actions\Action::make('activate')
+                            ->label('تفعيل')
+                            ->icon('heroicon-o-check-circle')
+                            ->color('success')
+                            ->action(function (Course $record) {
+                                $record->update(['status' => 'active']);
+                            })
+                            ->hidden(fn($record) => $record->status !== 'pending'),
+
+                        Tables\Actions\EditAction::make()
+                            ->color('primary'),
+
+                        Tables\Actions\DeleteAction::make()
+                            ->color('danger'),
+                    ]
+                )->label('الإجراءات')->tooltip('الإجراءات')
             ])
             ->bulkActions([
+                // Add bulk actions if needed
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
@@ -254,7 +203,7 @@ class CourseResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            StudentRelationManager::class
         ];
     }
 
@@ -264,6 +213,7 @@ class CourseResource extends Resource
             'index' => Pages\ListCourses::route('/'),
             'create' => Pages\CreateCourse::route('/create'),
             'edit' => Pages\EditCourse::route('/{record}/edit'),
+            'view' => Pages\ViewCourse::route('/{record}'),
         ];
     }
 }

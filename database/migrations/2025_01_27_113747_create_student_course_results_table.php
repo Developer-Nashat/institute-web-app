@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignUuid('course_id')->constrained();
             $table->foreignId('student_id')->constrained();
             $table->decimal('student_mark');
-            $table->foreignId('grade_evaluation_id')->constrained();
+            $table->foreignId('grade_evaluation_id')->constrained()->nullable();
             $table->timestamps();
         });
 
